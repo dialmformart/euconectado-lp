@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Eu Conectado - Premium Solutions</title>
+
+    
+
+    <!-- Tailwind CSS -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    
+
+    <!-- Lucide Icons -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+
+
+    <style>
+
+        /* Animações personalizadas */
+
+        @keyframes fade-in {
+
+            from { opacity: 0; transform: translateY(10px); }
+
+            to { opacity: 1; transform: translateY(0); }
+
+        }
+
+        .animate-fade-in {
+
+            animation: fade-in 1s ease-out forwards;
+
+        }
+
+        @keyframes marquee {
+
+            0% { transform: translateX(0%); }
+
+            100% { transform: translateX(-100%); }
+
+        }
+
+        .animate-marquee {
+
+            display: flex;
+
+            width: max-content;
+
+            animation: marquee 60s linear infinite;
+
+        }
+
+        .animate-marquee:hover {
+
+            animation-play-state: paused;
+
+        }
+
+        .animate-marquee-slow {
+
+            display: flex;
+
+            width: max-content;
+
+            animation: marquee 100s linear infinite;
+
+        }
+
+        .animate-marquee-slow:hover {
+
+            animation-play-state: paused;
+
+        }
+
+        
+
+        /* Utilitários */
+
+        .scrollbar-hide::-webkit-scrollbar {
+
+            display: none;
+
+        }
+
+        .scrollbar-hide {
+
+            -ms-overflow-style: none;
+
+            scrollbar-width: none;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div id="app-root"></div>
+
+
+
+    <script>
+
+        // --- DADOS E CONFIGURAÇÕES ---
+
+
+
+        const userProfiles = {
+
+            user1: {
+
+                id: 'user1',
+
+                name: "Dr. Silva",
+
+                preferences: { theme: 'dark', language: 'pt', currency: 'BRL' }
+
+            },
+
+            user2: {
+
+                id: 'user2',
+
+                name: "Mr. Smith",
+
+                preferences: { theme: 'light', language: 'en', currency: 'USD' }
+
+            }
+
+        };
+
+
+
+        const defaultPreferences = { theme: 'light', language: 'pt', currency: 'BRL' };
+
+
+
+        const translations = {
+
+            pt: {
+
+                nav: { services: "Serviços", features: "Funcionalidades", contact: "Contato", login: "Login", createAccount: "Criar conta", hello: "Olá", premium: "Premium Solutions", slogan: "Plataforma de soluções tecnológicas", menu_systems: "Sistemas", menu_financial: "Financeiro", menu_medical: "Agenda Médica", menu_classifieds: "Classificados", menu_config: "Configurações", menu_logout: "Fazer Logoff", menu_switch: "Trocar Usuário" },
+
+                hero: { tag: "Ecossistema Integrado", title_1: "Seu portal digital.", title_2: "Organização, Prosperidade", title_3: "e Saúde Digital.", desc: "Eleve o nível da sua gestão. Controle financeiro de alto desempenho, agenda médica inteligente e um marketplace exclusivo.", desc_highlight: "Integrado com IA.", btn_trial: "Teste grátis", btn_features: "Ver funcionalidades" },
+
+                card: { status: "Status: Lucrativo", balance_label: "Saldo Total Disponível", next_appt: "Próxima Consulta", active_ads: "Anúncios Ativos", published: "Publicados", btn_access: "Acessar Painel", btn_demo: "Demonstração", month_trend: "+12.5% este mês" },
+
+                features: { title: "O que oferecemos", subtitle: "Soluções integradas para o seu crescimento.", f1: "Financeiro", f1_d: "Contas, cartões e relatórios.", f2: "Agenda Médica", f2_d: "Consultas e prontuário.", f3: "Classificados", f3_d: "Anúncios e vendas.", f4: "Integrações", f4_d: "APIs e Webhooks." },
+
+                contact: { title: "Fale Conosco", subtitle: "Quer saber mais? Envie uma mensagem.", name: "Seu nome", email: "E-mail", btn: "Enviar Mensagem" },
+
+                footer: { copyright: "©️ 2025 EuConectado — Versão Beta 2.0" },
+
+                marquee: { welcome: "✨ Bem-vindo ao EuConectado!", test: "Teste o novo painel financeiro", signup: "Cadastre-se grátis", slogan: "Organização, Prosperidade e Saúde Digital" },
+
+                location: { condition: "Ensolarado" }
+
+            },
+
+            en: {
+
+                nav: { services: "Services", features: "Features", contact: "Contact", login: "Login", createAccount: "Sign up", hello: "Hello", premium: "Premium Solutions", slogan: "Technological solutions platform", menu_systems: "Systems", menu_financial: "Financial", menu_medical: "Medical Agenda", menu_classifieds: "Classifieds", menu_config: "Settings", menu_logout: "Log out", menu_switch: "Switch User" },
+
+                hero: { tag: "Integrated Ecosystem", title_1: "Your digital portal.", title_2: "Organization, Prosperity", title_3: "and Digital Health.", desc: "Level up your management. High-performance financial control, smart medical agenda, and an exclusive marketplace.", desc_highlight: "Integrated with AI.", btn_trial: "Free Trial", btn_features: "See Features" },
+
+                card: { status: "Status: Profitable", balance_label: "Total Balance Available", next_appt: "Next Appointment", active_ads: "Active Ads", published: "Published", btn_access: "Access Panel", btn_demo: "Demo", month_trend: "+12.5% this month" },
+
+                features: { title: "What we offer", subtitle: "Integrated solutions for your growth.", f1: "Financial", f1_d: "Bills, cards and reports.", f2: "Medical Agenda", f2_d: "Appointments and records.", f3: "Classifieds", f3_d: "Ads and sales.", f4: "Integrations", f4_d: "APIs and Webhooks." },
+
+                contact: { title: "Contact Us", subtitle: "Want to know more? Send a message.", name: "Your name", email: "E-mail", btn: "Send Message" },
+
+                footer: { copyright: "©️ 2025 EuConectado — Beta Version 2.0" },
+
+                marquee: { welcome: "✨ Welcome to EuConectado!", test: "Try the new financial dashboard", signup: "Sign up for free", slogan: "Organization, Prosperity and Digital Health" },
+
+                location: { condition: "Sunny" }
+
+            }
+
+        };
+
+
+
+        const yesterdayRates = { BRL: 1, USD: 5.75, EUR: 6.10, GBP: 7.30, BTC: 580000 };
+
+
+
+        // --- ESTADO DA APLICAÇÃO ---
+
+        const state = {
+
+            currentUser: userProfiles.user1, // Inicia logado
+
+            theme: userProfiles.user1.preferences.theme,
+
+            language: userProfiles.user1.preferences.language,
+
+            currency: userProfiles.user1.preferences.currency,
+
+            isMenuOpen: false,
+
+            showBalance: false,
+
+            isMobileSimulated: false,
+
+            scrolled: false,
+
+            openDropdown: null, // 'currency', 'language' ou null
+
+            rates: { BRL: 1, USD: 5.78, EUR: 6.12, GBP: 7.34, BTC: 582000 }
+
+        };
+
+
+
+        // --- FUNÇÕES DE UTILIDADE E COMPONENTES SVG ---
+
+
+
+        const getFlagSvg = (code, size = 14) => {
+
+            const style = `width: ${size}px; height: ${size}px; border-radius: 50%; object-fit: cover; display: inline-block; flex-shrink: 0;`;
+
+            if (code === 'BRL' || code === 'pt') return `<svg viewBox="0 0 32 32" style="${style}"><rect fill="#009b3a" width="32" height="32"/><path fill="#fedf00" d="M16 4L28 16L16 28L4 16z"/><circle fill="#002776" cx="16" cy="16" r="7"/><path fill="none" stroke="#fff" strokeWidth="1" d="M9 16 Q16 20 23 16"/></svg>`;
+
+            if (code === 'USD' || code === 'en') return `<svg viewBox="0 0 32 32" style="${style}"><rect fill="#b22234" width="32" height="32"/><path fill="#fff" d="M0 4h32M0 10h32M0 16h32M0 22h32M0 28h32"/><rect fill="#3c3b6e" width="16" height="18"/></svg>`;
+
+            if (code === 'EUR') return `<svg viewBox="0 0 32 32" style="${style}"><rect fill="#003399" width="32" height="32"/><circle fill="none" stroke="#ffcc00" strokeWidth="2" cx="16" cy="16" r="8" strokeDasharray="2 3"/></svg>`;
+
+            if (code === 'GBP') return `<svg viewBox="0 0 32 32" style="${style}"><rect fill="#00247d" width="32" height="32"/><path stroke="#fff" strokeWidth="4" d="M0 0L32 32M32 0L0 32"/><path stroke="#cf142b" strokeWidth="2" d="M0 0L32 32M32 0L0 32"/><path stroke="#fff" strokeWidth="6" d="M16 0v32M0 16h32"/><path stroke="#cf142b" strokeWidth="3" d="M16 0v32M0 16h32"/></svg>`;
+
+            return `<div style="${style} background-color: #ccc"></div>`;
+
+        };
+
+
+
+        // --- LÓGICA DE NEGÓCIO ---
+
+
+
+        function updateRates() {
+
+            ['USD', 'EUR', 'GBP', 'BTC'].forEach(code => {
+
+                const variation = (Math.random() * 0.004) - 0.002;
+
+                state.rates[code] = state.rates[code] * (1 + variation);
+
+            });
+
+            render();
+
+        }
+
+
+
+        function getCurrencyData() {
+
+            const baseRate = state.rates[state.currency];
+
+            const t = translations[state.language];
+
+            const list = [
+
+                { code: 'USD', current: state.rates.USD, yesterday: yesterdayRates.USD },
+
+                { code: 'EUR', current: state.rates.EUR, yesterday: yesterdayRates.EUR },
+
+                { code: 'GBP', current: state.rates.GBP, yesterday: yesterdayRates.GBP },
+
+                { code: 'BRL', current: state.rates.BRL, yesterday: yesterdayRates.BRL },
+
+                { code: 'BTC', current: state.rates.BTC, yesterday: yesterdayRates.BTC },
+
+            ];
+
+
+
+            return list.filter(c => c.code !== state.currency).map(c => {
+
+                const convertedValue = c.current / baseRate;
+
+                const rawChange = (c.current - c.yesterday) / c.yesterday;
+
+                const isPositive = rawChange >= 0;
+
+                const changePercent = `${isPositive ? '+' : ''}${(rawChange * 100).toFixed(2)}%`;
+
+                
+
+                let displayVal;
+
+                if (c.code === 'BTC') {
+
+                    displayVal = convertedValue.toLocaleString(state.language === 'pt' ? 'pt-BR' : 'en-US', { maximumFractionDigits: 2 });
+
+                    if (convertedValue > 1000) displayVal = (convertedValue / 1000).toFixed(1) + 'k';
+
+                } else {
+
+                    displayVal = convertedValue.toLocaleString(state.language === 'pt' ? 'pt-BR' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                }
+
+
+
+                return { ...c, displayVal, changePercent, isPositive };
+
+            });
+
+        }
+
+
+
+        // --- RENDERIZAÇÃO (VIEW) ---
+
+
+
+        function renderCurrencyItem(item) {
+
+            const colorClass = item.isPositive ? 'text-emerald-300' : 'text-red-300';
+
+            const icon = item.isPositive ? 'trending-up' : 'trending-down';
+
+            return `
+
+                <div class="flex items-center gap-1.5 mx-3">
+
+                    <span class="font-bold opacity-70">${item.code}</span>
+
+                    <span>${item.displayVal}</span>
+
+                    <div class="flex items-center ${colorClass} text-[9px]">
+
+                        <i data-lucide="${icon}" class="w-2.5 h-2.5"></i>
+
+                        <span class="ml-0.5">${item.changePercent}</span>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+
+        function renderCustomSelect(type, currentValue, options) {
+
+            const isDark = state.theme === 'dark';
+
+            const label = options.find(o => o.value === currentValue)?.label;
+
+            const isOpen = state.openDropdown === type;
+
+            
+
+            const btnBg = isDark ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200';
+
+            const dropdownBg = isDark ? 'bg-[#1a1f2e] border-white/10' : 'bg-white border-slate-100';
+
+            const itemColor = isDark ? 'text-gray-300 hover:bg-white/5' : 'text-slate-700 hover:bg-slate-50';
+
+            const activeBg = isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-900';
+
+
+
+            let html = `
+
+                <div class="relative">
+
+                    <button onclick="toggleDropdown('${type}')" class="flex items-center gap-1.5 px-2 h-6 rounded-md border text-[10px] font-bold transition-all ${btnBg}">
+
+                        ${getFlagSvg(currentValue)}
+
+                        <span>${label}</span>
+
+                        <i data-lucide="chevron-down" class="w-2.5 h-2.5 opacity-50 transition-transform ${isOpen ? 'rotate-180' : ''}"></i>
+
+                    </button>
+
+            `;
+
+
+
+            if (isOpen) {
+
+                html += `<div class="absolute top-full right-0 mt-1 w-32 py-1 rounded-lg shadow-xl border z-50 ${dropdownBg}">`;
+
+                options.forEach(opt => {
+
+                    const isActive = currentValue === opt.value;
+
+                    html += `
+
+                        <button onclick="selectOption('${type}', '${opt.value}')" class="w-full text-left px-3 py-1.5 text-[10px] font-medium flex items-center gap-2 transition-colors ${itemColor} ${isActive ? activeBg : ''}">
+
+                            ${getFlagSvg(opt.value)}
+
+                            <span class="flex-1">${opt.label}</span>
+
+                            ${isActive ? '<i data-lucide="check" class="w-2.5 h-2.5 text-[#D4AF37]"></i>' : ''}
+
+                        </button>
+
+                    `;
+
+                });
+
+                html += `</div>`;
+
+            }
+
+            html += `</div>`;
+
+            return html;
+
+        }
+
+
+
+        function render() {
+
+            const t = translations[state.language];
+
+            const isDark = state.theme === 'dark';
+
+            
+
+            // Variáveis de Estilo
+
+            const bgMain = isDark ? 'bg-[#02040a]' : 'bg-[#F0F2F5]';
+
+            const textMain = isDark ? 'text-white' : 'text-slate-900';
+
+            const textMuted = isDark ? 'text-gray-400' : 'text-slate-500';
+
+            const cardBg = isDark ? 'bg-[#0a0f1a]' : 'bg-white';
+
+            const cardBorder = isDark ? 'border-white/10' : 'border-slate-200';
+
+            const navBg = state.scrolled 
+
+                ? (isDark ? 'bg-[#02040a]/95 border-[#D4AF37]/30 shadow-black/50' : 'bg-white/95 border-slate-200 shadow-slate-200/50') 
+
+                : 'bg-transparent border-transparent';
+
+            const backdrop = 'backdrop-blur-xl shadow-lg';
+
+            
+
+            const currencyData = getCurrencyData();
+
+            const currenciesHtml = currencyData.map(renderCurrencyItem).join('<div class="w-px h-3 bg-white/20"></div>');
+
+            const marqueeCurrencies = `<div class="flex items-center">${currenciesHtml}</div>`.repeat(4);
+
+
+
+            // Conteúdo Principal
+
+            const contentHtml = `
+
+                <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+
+                    <div class="absolute top-[-10%] right-[-10%] w-[120%] h-[60%] bg-gradient-to-b ${isDark ? 'from-[#D4AF37]/10' : 'from-[#D4AF37]/20'} to-transparent rounded-full blur-[80px]"></div>
+
+                    <div class="absolute bottom-[-10%] left-[-10%] w-[120%] h-[60%] bg-gradient-to-t ${isDark ? 'from-[#059669]/10' : 'from-[#059669]/10'} to-transparent rounded-full blur-[80px]"></div>
+
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
+
+                </div>
+
+
+
+                <!-- Navbar -->
+
+                <nav class="sticky top-0 z-50 w-full transition-all duration-300 border-b ${state.scrolled ? navBg + ' ' + backdrop : navBg} py-2">
+
+                    <div class="container mx-auto px-4 lg:px-6 flex items-center justify-between relative">
+
+                        
+
+                        <!-- Logo -->
+
+                        <div class="flex items-center gap-2 lg:gap-3 cursor-pointer">
+
+                            <div class="relative w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#B49025] flex items-center justify-center shadow-lg shadow-[#D4AF37]/20">
+
+                                <div class="absolute inset-[1px] ${isDark ? 'bg-black' : 'bg-white'} rounded-[9px] flex items-center justify-center">
+
+                                    <span class="font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#D4AF37] to-[#B49025] text-sm lg:text-base">EC</span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="flex flex-col leading-tight">
+
+                                <h1 class="font-bold text-base lg:text-lg tracking-tight ${textMain}">EuConectado</h1>
+
+                                <span class="text-[7px] lg:text-[8px] text-[#D4AF37] font-medium uppercase tracking-[0.2em]">${t.nav.premium}</span>
+
+                                <span class="text-[6px] lg:text-[7px] ${textMuted} font-normal tracking-wide -mt-0.5">${t.nav.slogan}</span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Desktop Controls -->
+
+                        <div class="hidden ${state.isMobileSimulated ? '' : 'lg:flex'} items-center gap-3 text-sm font-medium">
+
+                            <div class="flex items-center gap-4 mr-2">
+
+                                <a href="#" class="${textMuted} hover:text-[#D4AF37] transition-colors text-xs">${t.nav.services}</a>
+
+                                <a href="#" class="${textMuted} hover:text-[#D4AF37] transition-colors text-xs">${t.nav.features}</a>
+
+                                <a href="#" class="${textMuted} hover:text-[#D4AF37] transition-colors text-xs">${t.nav.contact}</a>
+
+                            </div>
+
+                            <div class="h-4 w-px ${isDark ? 'bg-white/10' : 'bg-slate-200'}"></div>
+
+                            
+
+                            <!-- Botão Lua -->
+
+                            <button onclick="toggleTheme()" class="w-6 h-6 flex items-center justify-center rounded-full transition-colors ${isDark ? 'bg-white/10 text-yellow-400 hover:bg-white/20' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
+
+                                <i data-lucide="${isDark ? 'sun' : 'moon'}" class="w-3 h-3"></i>
+
+                            </button>
+
+
+
+                            <div class="flex items-center gap-2">
+
+                                ${renderCustomSelect('currency', state.currency, [
+
+                                    { value: 'BRL', label: 'Real' }, { value: 'USD', label: 'Dólar' },
+
+                                    { value: 'EUR', label: 'Euro' }, { value: 'GBP', label: 'Libra' }
+
+                                ])}
+
+                                ${renderCustomSelect('language', state.language, [
+
+                                    { value: 'pt', label: 'Português' }, { value: 'en', label: 'English' }
+
+                                ])}
+
+                            </div>
+
+
+
+                            <!-- User Button -->
+
+                            <div class="relative">
+
+                                <button onclick="toggleMenu()" class="flex items-center justify-between gap-2 px-2 h-6 min-w-[100px] ${isDark ? 'bg-white/10 hover:bg-white/20' : 'bg-slate-100 hover:bg-slate-200'} rounded-md transition-colors">
+
+                                    <div class="flex items-center gap-2">
+
+                                        ${state.currentUser 
+
+                                            ? `<div class="w-4 h-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B49025] flex items-center justify-center text-black font-bold text-[9px]">${state.currentUser.name.charAt(0)}</div>`
+
+                                            : `<i data-lucide="log-in" class="w-3 h-3 ${textMuted}"></i>`
+
+                                        }
+
+                                        <span class="${textMain} text-[10px] font-medium truncate max-w-[70px]">
+
+                                            ${state.currentUser ? `${t.nav.hello}, ${state.currentUser.name}` : t.nav.login}
+
+                                        </span>
+
+                                    </div>
+
+                                    <i data-lucide="chevron-down" class="w-2.5 h-2.5 ${textMuted} transition-transform ${state.isMenuOpen ? 'rotate-180' : ''}"></i>
+
+                                </button>
+
+                                
+
+                                <!-- Dropdown User -->
+
+                                ${state.isMenuOpen ? renderUserDropdown(isDark, t) : ''}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Mobile Controls -->
+
+                        <div class="${state.isMobileSimulated ? 'flex' : 'flex lg:hidden'} items-center gap-2 relative">
+
+                            <button onclick="toggleTheme()" class="w-6 h-6 flex items-center justify-center rounded-full ${isDark ? 'text-yellow-400 bg-white/5' : 'text-slate-700 bg-slate-100'}">
+
+                                <i data-lucide="${isDark ? 'sun' : 'moon'}" class="w-3 h-3"></i>
+
+                            </button>
+
+                            ${renderCustomSelect('currency', state.currency, [
+
+                                { value: 'BRL', label: 'R$' }, { value: 'USD', label: '$' },
+
+                                { value: 'EUR', label: '€' }, { value: 'GBP', label: '£' }
+
+                            ])}
+
+                            ${renderCustomSelect('language', state.language, [
+
+                                { value: 'pt', label: 'PT' }, { value: 'en', label: 'EN' }
+
+                            ])}
+
+                            
+
+                            <button onclick="toggleMenu()" class="flex items-center gap-1.5 px-2 py-0 h-6 rounded-lg border ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'} transition-all active:scale-95">
+
+                                ${state.currentUser 
+
+                                    ? `<div class="w-4 h-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B49025] flex items-center justify-center text-black font-bold text-[9px]">${state.currentUser.name.charAt(0)}</div>`
+
+                                    : `<i data-lucide="log-in" class="w-3 h-3 ${textMuted}"></i>`
+
+                                }
+
+                                <span class="text-[10px] font-bold ${textMain} truncate max-w-[60px]">
+
+                                    ${state.currentUser ? state.currentUser.name.split(' ')[0] : t.nav.login}
+
+                                </span>
+
+                            </button>
+
+                            <!-- Mobile Dropdown -->
+
+                            ${state.isMenuOpen ? renderUserDropdown(isDark, t, true) : ''}
+
+                        </div>
+
+                    </div>
+
+                </nav>
+
+
+
+                <!-- Barra Info -->
+
+                <div class="relative z-30 flex flex-col shadow-lg">
+
+                    <!-- Barra Fixa 50/50 -->
+
+                    <div class="${isDark ? 'bg-[#022c22]' : 'bg-[#047857]'} text-white text-[10px] py-1.5 border-b border-white/10">
+
+                        <div class="container mx-auto px-4 lg:px-6 flex flex-row items-center font-medium h-full">
+
+                            <div class="w-1/2 flex items-center gap-2 opacity-90 text-[9px] whitespace-nowrap overflow-hidden z-10">
+
+                                <div class="flex items-center gap-1 min-w-0">
+
+                                    <i data-lucide="map-pin" class="w-2.5 h-2.5 text-[#D4AF37] flex-shrink-0"></i>
+
+                                    <span class="truncate">Campina Grande/PB</span>
+
+                                </div>
+
+                                <div class="w-px h-2.5 bg-white/30 flex-shrink-0"></div>
+
+                                <div class="flex items-center gap-1 flex-shrink-0">
+
+                                    <i data-lucide="cloud-sun" class="w-2.5 h-2.5 text-yellow-300"></i>
+
+                                    <span>28°C</span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="w-1/2 overflow-hidden relative flex items-center h-5">
+
+                                <div class="absolute left-0 h-full w-2 z-10 bg-gradient-to-r ${isDark ? 'from-[#022c22]' : 'from-[#047857]'} to-transparent"></div>
+
+                                <div class="animate-marquee flex items-center whitespace-nowrap">
+
+                                    ${marqueeCurrencies}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Barra Marquee Lenta -->
+
+                    <div class="${isDark ? 'bg-[#064e3b]' : 'bg-[#059669]'} text-emerald-50 text-[10px] py-1 border-b border-white/10">
+
+                        <div class="container mx-auto px-4 overflow-hidden">
+
+                            <div class="animate-marquee-slow whitespace-nowrap font-medium tracking-wide flex items-center">
+
+                                ${(`<div class="flex items-center gap-8 px-4">
+
+                                    <span class="flex items-center gap-2">${t.marquee.welcome}</span>
+
+                                    <span>•</span>
+
+                                    <span>${t.marquee.test}</span>
+
+                                    <span>•</span>
+
+                                    <span class="font-bold">${t.marquee.signup}</span>
+
+                                    <span>•</span>
+
+                                    <span>${t.marquee.slogan}</span>
+
+                                </div>`).repeat(3)}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <main class="relative z-10 flex-grow">
+
+                    <section class="container mx-auto px-4 lg:px-6 pt-6 pb-10 lg:pt-14 lg:pb-24">
+
+                        <div class="flex flex-col ${state.isMobileSimulated ? 'gap-8' : 'lg:flex-row gap-10 lg:gap-16'} items-center">
+
+                            <!-- Hero Text -->
+
+                            <div class="flex-1 ${state.isMobileSimulated ? 'w-full text-center' : 'lg:pr-8 w-full text-center lg:text-left'}">
+
+                                <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#059669]/10 border border-[#059669]/30 text-[#059669] text-[9px] font-bold uppercase tracking-wider mb-4 animate-fade-in">
+
+                                    <i data-lucide="star" class="w-2.5 h-2.5 text-[#D4AF37] fill-[#D4AF37]"></i>
+
+                                    ${t.hero.tag}
+
+                                </div>
+
+                                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 tracking-tight ${textMain}">
+
+                                    <span class="font-serif italic text-xl md:text-2xl lg:text-3xl block mb-1 text-[#059669]">${t.hero.title_1}</span>
+
+                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#B49025]">${t.hero.title_2}</span> <br/>
+
+                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#059669] to-[#047857]">${t.hero.title_3}</span>
+
+                                </h1>
+
+                                <p class="text-sm lg:text-base ${textMuted} mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+
+                                    ${t.hero.desc} <span class="${isDark ? 'text-emerald-400' : 'text-emerald-600'} font-medium">${t.hero.desc_highlight}</span>
+
+                                </p>
+
+                                <div class="flex flex-wrap ${state.isMobileSimulated ? 'justify-center' : 'justify-center lg:justify-start'} gap-3">
+
+                                    <button class="px-6 py-3 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-slate-200 hover:bg-slate-50'} border ${textMain} text-sm font-medium rounded-xl backdrop-blur-sm transition-all">
+
+                                        ${t.hero.btn_features}
+
+                                    </button>
+
+                                    <button class="px-6 py-3 bg-gradient-to-r from-[#059669] to-[#047857] text-white text-sm font-bold rounded-xl shadow-lg shadow-[#059669]/30 transition-all transform hover:-translate-y-1 flex items-center gap-2 group">
+
+                                        ${t.hero.btn_trial}
+
+                                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+
+                    <section class="${isDark ? 'bg-[#050912] border-white/5' : 'bg-slate-50 border-slate-200'} py-8 border-t">
+
+                        <div class="container mx-auto px-4 lg:px-6">
+
+                            <div class="mb-6 ${state.isMobileSimulated ? 'text-center' : 'text-center lg:text-left'}">
+
+                                <h2 class="text-lg lg:text-2xl font-bold ${textMain} mb-1">${t.features.title}</h2>
+
+                                <p class="${textMuted} text-[10px] lg:text-sm max-w-2xl mx-auto lg:mx-0">${t.features.subtitle}</p>
+
+                            </div>
+
+                            <div class="grid ${state.isMobileSimulated ? 'grid-cols-1 gap-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'}">
+
+                                ${renderFeatureCard('wallet', t.features.f1, 'text-[#059669]', 'bg-[#059669]', t.features.f1_d, isDark, textMain, textMuted, cardBg, cardBorder)}
+
+                                ${renderFeatureCard('activity', t.features.f2, 'text-[#3b82f6]', 'bg-[#3b82f6]', t.features.f2_d, isDark, textMain, textMuted, cardBg, cardBorder)}
+
+                                ${renderFeatureCard('shopping-bag', t.features.f3, 'text-[#D4AF37]', 'bg-[#D4AF37]', t.features.f3_d, isDark, textMain, textMuted, cardBg, cardBorder)}
+
+                                ${renderFeatureCard('bar-chart-3', t.features.f4, 'text-purple-500', 'bg-purple-500', t.features.f4_d, isDark, textMain, textMuted, cardBg, cardBorder)}
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+
+                    <section class="py-8 ${isDark ? 'bg-[#010205]' : 'bg-white'} border-t ${cardBorder} relative overflow-hidden">
+
+                        <div class="container mx-auto px-4 lg:px-6 relative z-10">
+
+                            <div class="max-w-lg mx-auto ${cardBg} p-5 rounded-2xl border ${cardBorder} shadow-lg">
+
+                                <h2 class="text-base font-bold ${textMain} mb-1 text-center">${t.contact.title}</h2>
+
+                                <p class="${textMuted} text-center mb-4 text-[10px]">${t.contact.subtitle}</p>
+
+                                <form class="space-y-2.5 mt-3">
+
+                                    <div class="grid grid-cols-1 gap-2.5">
+
+                                        <input type="text" placeholder="${t.contact.name}" class="w-full ${isDark ? 'bg-[#02040a] border-white/10' : 'bg-slate-50 border-slate-200'} border rounded-lg px-3 py-2 ${textMain} focus:border-[#D4AF37] focus:outline-none text-xs" />
+
+                                        <input type="email" placeholder="${t.contact.email}" class="w-full ${isDark ? 'bg-[#02040a] border-white/10' : 'bg-slate-50 border-slate-200'} border rounded-lg px-3 py-2 ${textMain} focus:border-[#D4AF37] focus:outline-none text-xs" />
+
+                                    </div>
+
+                                    <button type="button" class="w-full bg-gradient-to-r from-[#059669] to-[#047857] text-white text-xs font-bold py-2.5 rounded-lg transition-colors shadow-md">
+
+                                        ${t.contact.btn}
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </main>
+
+
+
+                <footer class="border-t ${cardBorder} ${isDark ? 'bg-[#02040a]' : 'bg-slate-50'} py-6">
+
+                    <div class="container mx-auto px-4 lg:px-6 text-center">
+
+                        <div class="text-[10px] ${textMuted}">
+
+                            ${t.footer.copyright}
+
+                        </div>
+
+                    </div>
+
+                </footer>
+
+            `;
+
+            return contentHtml;
+
+        }
+
+
+
+        // --- HELPERS DE RENDERIZAÇÃO ---
+
+
+
+        function renderUserDropdown(isDark, t, isMobile = false) {
+
+            const dropdownBg = isDark ? 'bg-[#1a1f2e]' : 'bg-white';
+
+            const dropdownBorder = isDark ? 'border-white/10' : 'border-slate-200';
+
+            const textMain = isDark ? 'text-white' : 'text-slate-900';
+
+            const textMuted = isDark ? 'text-gray-400' : 'text-slate-500';
+
+            const itemHover = isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50';
+
+            const position = isMobile ? 'top-full right-0 mt-2' : 'top-full right-0 mt-2';
+
+
+
+            if (state.currentUser) {
+
+                return `
+
+                    <div class="absolute ${position} w-48 ${dropdownBg} border ${dropdownBorder} rounded-xl shadow-xl py-1 z-50 animate-fade-in origin-top-right">
+
+                        <div class="px-4 py-2 border-b ${dropdownBorder}">
+
+                            <p class="text-[10px] ${textMuted} font-medium uppercase">${t.nav.menu_systems}</p>
+
+                        </div>
+
+                        <button class="w-full text-left px-4 py-2.5 text-xs font-medium ${textMain} ${itemHover} flex items-center gap-2 transition-colors">
+
+                            <i data-lucide="wallet" class="w-3.5 h-3.5 text-[#059669]"></i> ${t.nav.menu_financial}
+
+                        </button>
+
+                        <button class="w-full text-left px-4 py-2.5 text-xs font-medium ${textMain} ${itemHover} flex items-center gap-2 transition-colors">
+
+                            <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#3b82f6]"></i> ${t.nav.menu_medical}
+
+                        </button>
+
+                        <button class="w-full text-left px-4 py-2.5 text-xs font-medium ${textMain} ${itemHover} flex items-center gap-2 transition-colors">
+
+                            <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-[#D4AF37]"></i> ${t.nav.menu_classifieds}
+
+                        </button>
+
+                        <div class="my-1 border-t ${dropdownBorder}"></div>
+
+                        <button onclick="toggleUser()" class="w-full text-left px-4 py-2.5 text-xs font-medium ${textMain} ${itemHover} flex items-center gap-2 transition-colors">
+
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#3b82f6]"></i> ${t.nav.menu_switch}
+
+                        </button>
+
+                        <button onclick="handleLogout()" class="w-full text-left px-4 py-2.5 text-xs font-medium text-red-400 ${isDark ? 'hover:bg-red-500/10' : 'hover:bg-red-50'} flex items-center gap-2 transition-colors rounded-b-xl">
+
+                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> ${t.nav.menu_logout}
+
+                        </button>
+
+                    </div>
+
+                `;
+
+            } else {
+
+                return `
+
+                    <div class="absolute ${position} w-48 ${dropdownBg} border ${dropdownBorder} rounded-xl shadow-xl py-1 z-50 animate-fade-in origin-top-right">
+
+                        <button onclick="handleLogin('user1')" class="w-full text-left px-4 py-2.5 text-xs font-medium ${textMain} ${itemHover} flex items-center gap-2 transition-colors rounded-xl">
+
+                            <i data-lucide="log-in" class="w-3.5 h-3.5 text-[#059669]"></i> ${t.nav.login}
+
+                        </button>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+
+        function renderFeatureCard(icon, title, color, bg, desc, isDark, textMain, textMuted, cardBg, cardBorder) {
+
+            return `
+
+                <div class="p-4 rounded-xl ${cardBg} border ${cardBorder} hover:border-opacity-50 transition-all duration-300 flex items-start gap-3 group">
+
+                    <div class="w-8 h-8 min-w-[2rem] ${bg}/10 rounded-lg flex items-center justify-center group-hover:${bg} transition-colors duration-500">
+
+                        <i data-lucide="${icon}" class="w-4 h-4 ${color} group-hover:text-white transition-colors"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3 class="text-xs font-bold ${textMain} mb-0.5">${title}</h3>
+
+                        <p class="text-[10px] ${textMuted} leading-relaxed">${desc}</p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+
+        // --- CONTROLADORES DE EVENTOS EXPOSTOS ---
+
+
+
+        window.toggleTheme = () => {
+
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+
+            renderApp();
+
+        };
+
+
+
+        window.toggleMenu = () => {
+
+            state.isMenuOpen = !state.isMenuOpen;
+
+            renderApp();
+
+        };
+
+
+
+        window.toggleDropdown = (type) => {
+
+            state.openDropdown = state.openDropdown === type ? null : type;
+
+            renderApp();
+
+        };
+
+
+
+        window.selectOption = (type, value) => {
+
+            if (type === 'currency') state.currency = value;
+
+            if (type === 'language') state.language = value;
+
+            state.openDropdown = null;
+
+            renderApp();
+
+        };
+
+
+
+        window.handleLogin = (userId) => {
+
+            const user = userProfiles[userId];
+
+            state.currentUser = user;
+
+            state.theme = user.preferences.theme;
+
+            state.language = user.preferences.language;
+
+            state.currency = user.preferences.currency;
+
+            state.isMenuOpen = false;
+
+            renderApp();
+
+        };
+
+
+
+        window.toggleUser = () => {
+
+            const nextUser = state.currentUser.id === 'user1' ? 'user2' : 'user1';
+
+            handleLogin(nextUser);
+
+        }
+
+
+
+        window.handleLogout = () => {
+
+            state.currentUser = null;
+
+            state.theme = defaultPreferences.theme;
+
+            state.language = defaultPreferences.language;
+
+            state.currency = defaultPreferences.currency;
+
+            state.isMenuOpen = false;
+
+            renderApp();
+
+        };
+
+
+
+        window.toggleMobileSim = () => {
+
+            state.isMobileSimulated = !state.isMobileSimulated;
+
+            renderApp();
+
+        };
+
+
+
+        // --- INICIALIZAÇÃO ---
+
+
+
+        function renderApp() {
+
+            const root = document.getElementById('app-root');
+
+            
+
+            // Botão Flutuante de Simulação
+
+            let html = '';
+
+            if (!state.isMobileSimulated) {
+
+                html += `
+
+                    <div class="fixed top-24 right-6 z-[60] flex flex-col gap-3">
+
+                        <button onclick="toggleMobileSim()" class="p-3 rounded-full shadow-2xl border transition-all transform hover:scale-110 ${state.theme === 'dark' ? 'bg-white/10 border-white/20 text-blue-400 hover:bg-white/20' : 'bg-white border-slate-200 text-blue-600 hover:bg-slate-50'}" title="Simular Celular">
+
+                            <i data-lucide="smartphone" class="w-5 h-5"></i>
+
+                        </button>
+
+                    </div>
+
+                `;
+
+            }
+
+
+
+            if (state.isMobileSimulated) {
+
+                html += `
+
+                    <div class="flex items-center justify-center min-h-screen bg-[#1a1a1a] p-4 md:p-10 overflow-hidden font-sans">
+
+                        <div class="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[800px] w-[375px] shadow-xl flex flex-col">
+
+                            <div class="h-[32px] w-[3px] bg-gray-800 absolute -start-[17px] top-[72px] rounded-s-lg"></div>
+
+                            <div class="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
+
+                            <div class="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
+
+                            <div class="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
+
+                            <div class="rounded-[2rem] overflow-hidden w-full h-full bg-black relative">
+
+                                ${render(true)} <!-- Passa true para isSimulated -->
+
+                                <button onclick="toggleMobileSim()" class="absolute bottom-4 right-4 z-[70] p-2 bg-black/50 backdrop-blur-md text-white rounded-full border border-white/20 hover:bg-white/20 transition-colors">
+
+                                    <i data-lucide="monitor" class="w-4 h-4"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            } else {
+
+                html += render(false);
+
+            }
+
+
+
+            root.innerHTML = html;
+
+            lucide.createIcons(); // Re-inicializa ícones após renderização
+
+        }
+
+
+
+        // Listeners de Scroll
+
+        window.addEventListener('scroll', () => {
+
+            const isScrolled = window.scrollY > 20;
+
+            if (state.scrolled !== isScrolled) {
+
+                state.scrolled = isScrolled;
+
+                renderApp();
+
+            }
+
+        });
+
+
+
+        // Fechar dropdowns ao clicar fora
+
+        document.addEventListener('mousedown', (e) => {
+
+            if (state.openDropdown || state.isMenuOpen) {
+
+                // Lógica simplificada: se clicar em qualquer lugar que não seja um botão, fecha.
+
+                // Em uma app real, verificaríamos o target.
+
+                const isButton = e.target.closest('button');
+
+                if (!isButton) {
+
+                    state.openDropdown = null;
+
+                    state.isMenuOpen = false;
+
+                    renderApp();
+
+                }
+
+            }
+
+        });
+
+
+
+        // Loop de atualização de cotações
+
+        setInterval(updateRates, 5 * 60 * 1000);
+
+
+
+        // Render inicial
+
+        renderApp();
+
+
+
+    </script>
+
+</body>
+
+</html>
+
